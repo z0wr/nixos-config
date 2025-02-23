@@ -14,7 +14,7 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Hardware configuration
-  imports = [ "./hardware-configuration.nix" ];
+  imports = [ "/etc/nixos/hardware-configuration.nix" ];
 
   # Localisation
   time.timeZone = "Europe/London";
@@ -26,6 +26,8 @@
   networking.nameservers = [ "94.140.14.14" "94.140.15.15" ];
 
   # Packages
+  nixpkgs.config.allowUnfree = true;
+
   environment.systemPackages = [
     # General
     pkgs.discord
@@ -36,10 +38,8 @@
 
     # Gamedev
     pkgs.aseprite
-    pkgs.godot
 
     # Development
-    pkgs.golang
     pkgs.git
     pkgs.libgcc
     pkgs.python313
@@ -51,23 +51,17 @@
     pkgs.nmap
   ];
 
-  # Programs
-  programs = {
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      autosuggestions.enable = true;
-      syntaxHighlighting.enable = true;
-    };
-  };
+  # Shell
+  programs.zsh.enable = true;
+  programs.zsh.autosuggestions.enable = true;
+  programs.zsh.enableCompletion = true;
+  programs.zsh.syntaxHighlighting.enable = true;
+  users.defaultUserShell = pkgs.zsh;
 
   # Sound
   services.pipewire.enable = true;
   services.pipewire.alsa.enable = true;
   services.pipewire.pulse.enable = true;
-
-  # Unfree software
-  nixpkgs.config.allow.Unfree = true;
 
   # Users
   users.users.z0wr.isNormalUser = true;
@@ -75,5 +69,5 @@
   users.users.z0wr.extraGroups = [ "wheel" ];
 
   # Initial version - DO NOT CHANGE THIS!
-  System.stateversion = "24.11";
+  system.stateVersion = "24.11";
 }
